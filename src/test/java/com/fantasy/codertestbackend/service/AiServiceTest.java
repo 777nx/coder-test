@@ -35,7 +35,9 @@ public class AiServiceTest {
 
             // 测试生成关卡
             Integer salary = 10000;
-            LevelGenerationResponse response = levelGenerationAiService.generateLevel(salary);
+            String direction = "全栈开发";
+            String userMessage = "当前薪资：" + salary + "，学习方向：" + direction;
+            LevelGenerationResponse response = levelGenerationAiService.generateLevel(userMessage);
 
             log.info("关卡生成成功:");
             log.info("关卡名称: {}", response.getLevelName());
