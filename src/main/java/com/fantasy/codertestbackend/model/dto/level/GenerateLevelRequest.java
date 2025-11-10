@@ -16,4 +16,9 @@ public class GenerateLevelRequest implements Serializable {
      * 当前薪资（用于匹配难度）
      */
     private Integer salary;
+
+    /**
+     * 学习方向
+     */
+    private String direction;
 }
