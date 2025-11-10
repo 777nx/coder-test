@@ -5,6 +5,7 @@ import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fantasy.codertestbackend.enums.UserRoleEnum;
 import com.fantasy.codertestbackend.mapper.UserMapper;
 import com.fantasy.codertestbackend.model.dto.user.UserLoginRequest;
 import com.fantasy.codertestbackend.model.dto.user.UserRegisterRequest;
@@ -71,6 +72,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setUsername(username);
         user.setPassword(encryptPassword);
         user.setNickname(StrUtil.isBlank(nickname) ? username : nickname);
+        user.setUserRole(UserRoleEnum.USER.getValue()); // 默认角色为普通用户
         user.setSalary(10000); // 默认薪资10000
 
         boolean saveResult = this.save(user);
@@ -187,5 +189,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         updateWrapper.set("salary", newSalary);
 
         return this.update(updateWrapper);
+    }
+
+    @Override
+    public boolean isAdmin(User user) {
+        return user != null && UserRoleEnum.ADMIN.getValue().equals(user.getUserRole());
+    }
+
+    @Override
+    public void checkAdminAuth(HttpServletRequest request) {
+        User user = getLoginUser(request);
+        if (!isAdmin(user)) {
+            throw new RuntimeException("无权限访问，仅限管理员");
+        }
     }
 }

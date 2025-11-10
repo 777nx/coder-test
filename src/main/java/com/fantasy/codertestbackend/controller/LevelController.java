@@ -1,5 +1,8 @@
 package com.fantasy.codertestbackend.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fantasy.codertestbackend.enums.LevelPriorityEnum;
 import com.fantasy.codertestbackend.model.dto.level.GenerateLevelRequest;
 import com.fantasy.codertestbackend.model.entity.Level;
 import com.fantasy.codertestbackend.model.entity.User;
@@ -75,6 +78,34 @@ public class LevelController {
             return ResultUtils.success(level);
         } catch (Exception e) {
             log.error("获取关卡详情失败", e);
+            return ResultUtils.error(50000, e.getMessage());
+        }
+    }
+
+    /**
+     * 分页获取精选关卡列表（公开接口）
+     *
+     * @param current  当前页码
+     * @param pageSize 页面大小
+     * @return 精选关卡分页数据
+     */
+    @GetMapping("/featured")
+    @Operation(summary = "分页获取精选关卡列表")
+    public BaseResponse<Page<Level>> getFeaturedLevels(@RequestParam(defaultValue = "1") long current,
+                                                       @RequestParam(defaultValue = "10") long pageSize) {
+        try {
+            // 构建查询条件：只查询精选关卡（priority >= 999）
+            QueryWrapper<Level> queryWrapper = new QueryWrapper<>();
+            queryWrapper.ge("priority", LevelPriorityEnum.FEATURED.getValue());
+
+            // 按优先级和创建时间排序
+            queryWrapper.orderByDesc("priority", "createTime");
+
+            Page<Level> levelPage = levelService.page(new Page<>(current, pageSize), queryWrapper);
+            return ResultUtils.success(levelPage);
+
+        } catch (Exception e) {
+            log.error("获取精选关卡列表失败", e);
             return ResultUtils.error(50000, e.getMessage());
         }
     }

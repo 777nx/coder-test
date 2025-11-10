@@ -2,6 +2,7 @@ package com.fantasy.codertestbackend.service.impl;
 
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fantasy.codertestbackend.enums.LevelPriorityEnum;
 import com.fantasy.codertestbackend.mapper.LevelMapper;
 import com.fantasy.codertestbackend.model.dto.ai.LevelGenerationResponse;
 import com.fantasy.codertestbackend.model.entity.Level;
@@ -36,6 +37,7 @@ public class LevelServiceImpl extends ServiceImpl<LevelMapper, Level> implements
             level.setOptions(JSONUtil.toJsonStr(aiResponse.getOptions())); // 将选项列表转换为JSON字符串
             level.setDifficulty(aiResponse.getDifficulty());
             level.setTargetSalary(aiResponse.getTargetSalary());
+            level.setPriority(LevelPriorityEnum.NORMAL.getValue()); // 默认优先级为普通
 
             // 保存到数据库
             boolean saveResult = this.save(level);
@@ -68,6 +70,7 @@ public class LevelServiceImpl extends ServiceImpl<LevelMapper, Level> implements
         level.setOptions("[]"); // 空选项
         level.setDifficulty(getDifficultyBySalary(salary));
         level.setTargetSalary(salary);
+        level.setPriority(LevelPriorityEnum.NORMAL.getValue()); // 默认优先级为普通
         return level;
     }
 
