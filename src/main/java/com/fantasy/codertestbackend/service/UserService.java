@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.fantasy.codertestbackend.model.dto.user.UserLoginRequest;
 import com.fantasy.codertestbackend.model.dto.user.UserRegisterRequest;
 import com.fantasy.codertestbackend.model.entity.User;
+import com.fantasy.codertestbackend.model.vo.UserRankingVO;
 import com.fantasy.codertestbackend.model.vo.UserVO;
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.util.List;
 
 /**
  * 用户服务
@@ -76,4 +79,12 @@ public interface UserService extends IService<User> {
      * @throws RuntimeException 如果不是管理员则抛出异常
      */
     void checkAdminAuth(HttpServletRequest request);
+
+    /**
+     * 获取薪资排行榜
+     *
+     * @param limit 排行榜数量限制
+     * @return 排行榜列表
+     */
+    List<UserRankingVO> getSalaryRanking(int limit);
 }
