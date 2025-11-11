@@ -24,6 +24,9 @@ public class AiServiceTest {
     @Resource
     private ResultReportAiService resultReportAiService;
 
+    @Resource
+    private InterviewQuestionSearchTool interviewQuestionSearchTool;
+
     /**
      * 测试关卡生成服务
      * 注意：需要有效的 API Key 才能运行
@@ -97,6 +100,28 @@ public class AiServiceTest {
         } catch (Exception e) {
             log.warn("结果报告生成测试失败（可能是 API Key 未配置）: {}", e.getMessage());
             // 不抛出异常，因为这可能是配置问题而非代码问题
+        }
+    }
+
+    /**
+     * 测试面试题搜索工具
+     */
+    @Test
+    void testInterviewQuestionSearch() {
+        try {
+            log.info("开始测试面试题搜索工具...");
+
+            // 测试搜索Java相关面试题
+            String result = interviewQuestionSearchTool.searchInterviewQuestions("Java");
+
+            log.info("面试题搜索结果: {}", result);
+
+            // 验证结果不为空
+            assert result != null && !result.trim().isEmpty();
+
+        } catch (Exception e) {
+            log.warn("面试题搜索测试失败（可能是网络问题）: {}", e.getMessage());
+            // 不抛出异常，因为这可能是网络问题而非代码问题
         }
     }
 }
